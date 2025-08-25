@@ -3,7 +3,7 @@ name: Keep Supabase Alive
 # 每6天运行一次 + 允许手动运行
 on:
   schedule:
-    - cron: '0 12 */6 * *'  # 每6天中午12点UTC
+    - cron: '0 12 */5 * *'  # 每5天中午12点UTC
   workflow_dispatch:        # 手动运行按钮
 
 jobs:
