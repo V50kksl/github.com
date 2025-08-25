@@ -1,0 +1,29 @@
+name: Keep Supabase Alive
+
+# 每6天运行一次 + 允许手动运行
+on:
+  schedule:
+    - cron: '0 12 */6 * *'  # 每6天中午12点UTC
+  workflow_dispatch:        # 手动运行按钮
+
+jobs:
+  ping:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Ping Supabase
+      run: |
+        echo "🔄 开始保活Supabase..."
+        response=$(curl -s -w "%{http_code}" \
+          -H "apikey: ${{ secrets.SUPABASE_ANON_KEY }}" \
+          -H "Authorization: Bearer ${{ secrets.SUPABASE_ANON_KEY }}" \
+          -o /dev/null \
+          "https://dgofbyradcsukobsgshu.supabase.co/rest/v1/")
+        
+        if [ "$response" -eq 200 ] || [ "$response" -eq 404 ]; then
+          echo "✅ 保活成功! HTTP状态码: $response"
+        else
+          echo "⚠️ 保活响应: HTTP状态码: $response"
+        fi
+        
+        echo "📅 保活时间: $(date)"
+        echo "🎉 保活任务完成!"
